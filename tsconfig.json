@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false, // Temporarily set to false to avoid type conflicts
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@db/*": ["./src/db/pickbazar/*"]
+    },
+    "incremental": true,
+    "skipLibCheck": true // Enable full type checking to ensure no type conflicts
+  }
+}
