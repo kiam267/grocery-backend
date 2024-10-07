@@ -47,6 +47,7 @@ import { BecomeSellerModule } from './become-seller/become-seller.module';
 import { OwnershipTransferModule } from './ownership-transfer/ownership-transfer.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import databaseConfig, { CONFIG_DATABASE } from './config/database.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot({

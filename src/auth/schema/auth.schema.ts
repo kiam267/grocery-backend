@@ -7,18 +7,20 @@ import jwt from 'jsonwebtoken';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
-export class User  {
+export class User {
   @Prop({ required: true })
   name: string;
-  
+
   @Prop({ required: true, unique: true })
   email: string;
-  
+
   @Prop({ required: true })
   password: string;
-  
-  @Prop({default: 'customer',})
+
+  @Prop({ default: 'customer' })
   roles: string;
+
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -34,20 +36,20 @@ UserSchema.pre<UserDocument>('save', async function (next) {
 
 // jwt token middleware
 
-UserSchema.methods.generateToken = async function () {
-  return jwt.sign(
-    {
-      id: this._id,
-      email: this.email,
-      roles: this.roles,
-    },
-    process.env.TOKEN_SECRET,
-    {
-      expiresIn: '10d',
-    },
-  );
-};
+// UserSchema.methods.generateToken = async function () {
+//   return jwt.sign(
+//     {
+//       id: this._id,
+//       email: this.email,
+//       roles: this.roles,
+//     },
+//     process.env.TOKEN_SECRET,
+//     {
+//       expiresIn: '10d',
+//     },
+//   );
+// };
 
-export interface UserModel extends Model<UserDocument> {
-  generateToken(): string;
-}
+// export interface UserModel extends Model<UserDocument> {
+//   generateToken(): string;
+// }

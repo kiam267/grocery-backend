@@ -23,21 +23,16 @@ import { InjectModel, ModelDefinition } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { JwtService } from '@nestjs/jwt';
+
 const users = plainToClass(User, usersJson);
 
 @Injectable()
 export class AuthService {
-  // constructor(
-  //   // @ts-ignore
-  //   @InjectModel(Users.name)
-
-  // ) { }
-
-  // @ts-ignore
-  @InjectModel(Users.name) private readonly userModel: Model<UserDocument>;
-
   private users: User[] = users;
-  private jwtService: JwtService;
+  constructor(
+    @InjectModel(Users.name) private readonly userModel: Model<UserDocument>,
+    private readonly jwtService: JwtService, // Inject JwtService
+  ) {}
 
   async register(createUserInput: RegisterDto): Promise<AuthResponse> {
     const user: User = {
@@ -48,12 +43,9 @@ export class AuthService {
       updated_at: new Date(),
     };
 
-    this.users.push(user);
-
     const findEmailIn = await this.userModel.findOne({
       email: createUserInput.email,
     });
-    console.log(findEmailIn);
 
     if (findEmailIn) {
       return {
@@ -62,19 +54,41 @@ export class AuthService {
       };
     }
 
-    const createdUser = await this.userModel.create({
-      name: createUserInput.name,
-      email: createUserInput.email,
-      password: createUserInput.password,
+    if (createUserInput.password.length <= 6) {
+      return {
+        error: true,
+        message: 'Password should be at least 6 characters long',
+      };
+    }
+
+    // const createdUser = await this.userModel.create({
+    //   name: createUserInput.name,
+    //   email: createUserInput.email,
+    //   password: createUserInput.password,
+    // });
+
+    const payload = await {
+      id: 4234,
+      name: 'kldsfjkldf',
+      email: 'dfklkldf',
+    };
+
+    const token = await this.jwtService.sign({
+      id: 4234,
+      name: 'kldsfjkldf',
+      email: 'dfklkldf',
     });
 
-    console.log('ok', createdUser);
+    console.log(token);
 
     return {
       token: 'jwt token',
+
+      // token: token,
       permissions: ['', 'customer'],
     };
   }
+
   async login(loginInput: LoginDto): Promise<AuthResponse> {
     console.log(loginInput);
     if (loginInput.email === 'admin@demo.com') {

@@ -29,6 +29,7 @@ export class AuthController {
   createAccount(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
+
   @Post('token')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -57,20 +58,25 @@ export class AuthController {
   resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
+  
   @Post('change-password')
   changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this.authService.changePassword(changePasswordDto);
   }
+
   @Post('logout')
   async logout(): Promise<boolean> {
     return true;
   }
+
+
   @Post('verify-forget-password-token')
   verifyForgetPassword(
     @Body() verifyForgetPasswordDto: VerifyForgetPasswordDto,
   ) {
     return this.authService.verifyForgetPasswordToken(verifyForgetPasswordDto);
   }
+
 
   @Get('me')
   me() {
