@@ -2,11 +2,33 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import { Permission, PermissionSchema } from './permissions.schema';
+import { AddressSchema, Address } from './address.schema';
+import { Wallet, WalletSchema } from './wallet.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: true }) // This will automatically add createdAt and updatedAt
+export class Profile extends Document {
+  @Prop({ default: null })
+  avatar: string;
+
+  @Prop({ default: null })
+  bio: string;
+
+  @Prop({ default: null })
+  contact: string;
+
+  @Prop({ default: null })
+  notifications: string;
+}
+
+export const ProfileSchema = SchemaFactory.createForClass(Profile);
+
+//  PermissionSchema
+
+// It's main Schema
+@Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
   name: string;
@@ -20,7 +42,32 @@ export class User {
   @Prop({ default: 'customer' })
   roles: string;
 
+  @Prop({ default: null })
+  email_varified_at: Date;
 
+  @Prop({ default: null })
+  is_active: boolean;
+
+  @Prop({ required: true })
+  coustomer_id: string;
+
+  @Prop({ default: null })
+  shop_id: string;
+
+  @Prop({ default: null })
+  email_verified: boolean;
+
+  @Prop({ type: ProfileSchema })
+  profile: Profile;
+
+  @Prop({ type: PermissionSchema })
+  permissions: Permission[];
+
+  @Prop({ default: null, type: AddressSchema })
+  address: Address[];
+
+  @Prop({ type: WalletSchema, default: null })
+  wallet: Wallet;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -33,23 +80,3 @@ UserSchema.pre<UserDocument>('save', async function (next) {
   }
   next();
 });
-
-// jwt token middleware
-
-// UserSchema.methods.generateToken = async function () {
-//   return jwt.sign(
-//     {
-//       id: this._id,
-//       email: this.email,
-//       roles: this.roles,
-//     },
-//     process.env.TOKEN_SECRET,
-//     {
-//       expiresIn: '10d',
-//     },
-//   );
-// };
-
-// export interface UserModel extends Model<UserDocument> {
-//   generateToken(): string;
-// }
