@@ -58,7 +58,7 @@ export class AuthController {
   resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
-  
+
   @Post('change-password')
   changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this.authService.changePassword(changePasswordDto);
@@ -69,7 +69,6 @@ export class AuthController {
     return true;
   }
 
-
   @Post('verify-forget-password-token')
   verifyForgetPassword(
     @Body() verifyForgetPasswordDto: VerifyForgetPasswordDto,
@@ -77,9 +76,10 @@ export class AuthController {
     return this.authService.verifyForgetPasswordToken(verifyForgetPasswordDto);
   }
 
-
   @Get('me')
-  me() {
+  me(@Body() meDto) {
+    console.log(meDto);
+
     return this.authService.me();
   }
   @Post('add-points')

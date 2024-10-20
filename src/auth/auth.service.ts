@@ -37,6 +37,7 @@ export class AuthService {
   async register(createUserInput: RegisterDto): Promise<AuthResponse> {
     const user: User = {
       id: uuidv4(),
+
       ...users[0],
       ...createUserInput,
       created_at: new Date(),
@@ -61,31 +62,25 @@ export class AuthService {
       };
     }
 
-    // const createdUser = await this.userModel.create({
-    //   name: createUserInput.name,
-    //   email: createUserInput.email,
-    //   password: createUserInput.password,
-    // });
-
-    const payload = await {
-      id: 4234,
-      name: 'kldsfjkldf',
-      email: 'dfklkldf',
-    };
-
-    const token = await this.jwtService.sign({
-      id: 4234,
-      name: 'kldsfjkldf',
-      email: 'dfklkldf',
+    const createdUser = await this.userModel.create({
+      coustomer_id: uuidv4(),
+      name: createUserInput.name,
+      email: createUserInput.email,
+      password: createUserInput.password,
     });
 
-    console.log(token);
+    const payload = {
+      customer_id: createdUser.coustomer_id,
+      name: createdUser.name,
+      email: createdUser.email,
+      role: createdUser.roles,
+    };
+
+    const token = this.jwtService.sign(payload);
 
     return {
-      token: 'jwt token',
-
-      // token: token,
-      permissions: ['', 'customer'],
+      token: token,
+      permissions: [createdUser.roles],
     };
   }
 
@@ -205,6 +200,8 @@ export class AuthService {
   //   return this.users.find((user) => user.id === getUserArgs.id);
   // }
   me(): User {
+    console.log();
+    
     return this.users[0];
   }
 

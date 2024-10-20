@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Model } from 'mongoose';
+import { Document, HydratedDocument, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { Permission, PermissionSchema } from './permissions.schema';
 import { AddressSchema, Address } from './address.schema';
 import { Wallet, WalletSchema } from './wallet.schema';
@@ -36,7 +35,7 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   password: string;
 
   @Prop({ default: 'customer' })
@@ -66,7 +65,7 @@ export class User {
   @Prop({ default: null, type: AddressSchema })
   address: Address[];
 
-  @Prop({ type: WalletSchema, default: null })
+  @Prop({ default: null, type: WalletSchema })
   wallet: Wallet;
 }
 
